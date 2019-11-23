@@ -338,8 +338,8 @@ namespace LVonasek
                 int[] inds = gameObject.Value.GetComponent<MeshFilter>().mesh.triangles;
                 for (int i = 0; i < inds.Length; i += 3)
                 {
-                    Vector3[] triangleVert = new Vector3[3];
-                    for (int j = 0; j < 3; j++)
+                    Vector3[] triangleVert = new Vector3[3]; //這個triangle的三個點
+                    for (int j = 0; j < 3; j++) //看此點是否已經在已出現點的陣列裡面
                     {
                         triangleVert[j] = verts[inds[i + j]];
                         if (!vertices.Contains(triangleVert[j]))
@@ -348,7 +348,7 @@ namespace LVonasek
                         }
                     }
 
-                    if (edges.ContainsKey(new Edge(triangleVert[0], triangleVert[1])))
+                    if (edges.ContainsKey(new Edge(triangleVert[0], triangleVert[1]))) //查看這個邊是否已經出現過，出現過就count + 1, 未出現就初始化這條邊
                     {
                         edges[new Edge(triangleVert[0], triangleVert[1])] += 1;
                     }
@@ -378,7 +378,7 @@ namespace LVonasek
 
             }
 
-            foreach (var edge in edges)
+            foreach (var edge in edges) //等所有的邊都檢查過一次後，把count只有出現一次的邊取出來，並取出這條邊的兩個點在點陣列中的位置，然後丟進indices(用來之後要在mesh裡面把它畫出來)
             {
                 if(edge.Value == 1)
                 {
@@ -390,6 +390,7 @@ namespace LVonasek
                 //indices2.Add(vertices.FindIndex(x => Vector3.Equals(x, edge.Key.v2)));
             }
 
+            // 畫mesh
             GameObject go = Instantiate(mesh);
             go.SetActive(true);
             go.GetComponent<MeshFilter>().mesh.vertices = vertices.ToArray();

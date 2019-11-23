@@ -58,6 +58,7 @@ namespace LVonasek
 
         public Dictionary<string, GameObject> gamesObjects = new Dictionary<string, GameObject>();
         public GameObject mesh;
+        private GameObject go;
         private string filePath;
         private StreamWriter s;
 
@@ -94,17 +95,12 @@ namespace LVonasek
             if (on)
             {
                 threadOpEnable = true;
+                DestroyBoundaries();
             } else
             {
                 threadOpDisable = true;
+                DrawBoundaries();
             }
-            s.Write("------------------------------------------------\n");
-            foreach (var gameObject in gamesObjects)
-            {
-                s.Write("mesh-id:" + gameObject.Key + ", vertices:" + gameObject.Value.GetComponent<MeshFilter>().mesh.vertices.Length +　", indices:" + gameObject.Value.GetComponent<MeshFilter>().mesh.triangles.Length + "\n");
-            }
-            s.Close();
-            DrawBoundaries();
         }
 
         public void SaveScan()
@@ -324,11 +320,10 @@ namespace LVonasek
 
         public void DrawBoundaries()
         {
-            List<Vector3> vertices = new List<Vector3>();
             List<int> indices = new List<int>();
-            List<int> indices2 = new List<int>();
-            // List<Edge> edges = new List<Edge>();
             Dictionary<Edge, int> edges = new Dictionary<Edge, int>();
+            Dictionary<Vector3, int> vertices = new Dictionary<Vector3, int>();
+
             foreach (var gameObject in gamesObjects)
             {
                 if (gameObject.Value.GetComponent<MeshFilter>().mesh.triangles == null || gameObject.Value.GetComponent<MeshFilter>().mesh.triangles.Length <= 3 || gameObject.Value == null)
@@ -342,9 +337,10 @@ namespace LVonasek
                     for (int j = 0; j < 3; j++) //看此點是否已經在已出現點的陣列裡面
                     {
                         triangleVert[j] = verts[inds[i + j]];
-                        if (!vertices.Contains(triangleVert[j]))
+
+                        if(!vertices.ContainsKey(triangleVert[j]))
                         {
-                            vertices.Add(triangleVert[j]);
+                            vertices.Add(triangleVert[j], vertices.Count);
                         }
                     }
 
@@ -382,18 +378,21 @@ namespace LVonasek
             {
                 if(edge.Value == 1)
                 {
-                    indices.Add(vertices.FindIndex(x => Vector3.Equals(x, edge.Key.v1)));
-                    indices.Add(vertices.FindIndex(x => Vector3.Equals(x, edge.Key.v2)));
+                    //indices.Add(vertices.FindIndex(x => Vector3.Equals(x, edge.Key.v1)));
+                    //indices.Add(vertices.FindIndex(x => Vector3.Equals(x, edge.Key.v2)));
+                    indices.Add(vertices[edge.Key.v1]);
+                    indices.Add(vertices[edge.Key.v2]);
                 }
-
-                //indices2.Add(vertices.FindIndex(x => Vector3.Equals(x, edge.Key.v1)));
-                //indices2.Add(vertices.FindIndex(x => Vector3.Equals(x, edge.Key.v2)));
             }
 
+            Vector3[] vertss = new Vector3[vertices.Keys.Count];
+            vertices.Keys.CopyTo(vertss, 0);
+
             // 畫mesh
-            GameObject go = Instantiate(mesh);
+            go = Instantiate(mesh);
             go.SetActive(true);
-            go.GetComponent<MeshFilter>().mesh.vertices = vertices.ToArray();
+            //go.GetComponent<MeshFilter>().mesh.vertices = vertices.ToArray();
+            go.GetComponent<MeshFilter>().mesh.vertices = vertss;
             go.GetComponent<MeshFilter>().mesh.SetIndices(indices.ToArray(), MeshTopology.Lines, 0, false);
             List<Color> colors = new List<Color>();
             for(int i = 0; i < vertices.Count; i++)
@@ -401,28 +400,23 @@ namespace LVonasek
                 colors.Add(Color.red);
             }
             go.GetComponent<MeshFilter>().mesh.colors = colors.ToArray();
-            go.transform.position += (Vector3.right * 0.2f + Vector3.up * 0.1f);
-
-            /*GameObject go2 = Instantiate(mesh);
-            go2.SetActive(true);
-            go2.GetComponent<MeshFilter>().mesh.vertices = vertices.ToArray();
-            go2.GetComponent<MeshFilter>().mesh.SetIndices(indices2.ToArray(), MeshTopology.Lines, 0, false);
-            List<Color> colors2 = new List<Color>();
-            for (int i = 0; i < vertices.Count; i++)
-            {
-                colors2.Add(Color.blue);
-            }
-            go2.GetComponent<MeshFilter>().mesh.colors = colors2.ToArray();
-            go2.transform.position += (Vector3.left * 0.2f + Vector3.up * 0.01f);*/
+            go.transform.position +=  Vector3.up * 0.1f;
         }
 
-        public struct Edge
+        public void DestroyBoundaries()
+        {
+            Destroy(go);
+        }
+
+        public struct Edge:IEquatable<Edge>
         {
             public Vector3 v1;
             public Vector3 v2;
-            public Edge(Vector3 aV1, Vector3 aV2)            {
+            private float ID;
+            public Edge(Vector3 aV1, Vector3 aV2){
                 v1 = aV1;
                 v2 = aV2;
+                ID = (v1 + v2).magnitude + (v1 - v2).magnitude;
             }
             public bool Equals(Edge other)
             {
@@ -435,6 +429,43 @@ namespace LVonasek
                     return false;
                 }
             }
+
+            public override int GetHashCode()
+            {
+                return ID.GetHashCode();
+            }
         }
+        /*public struct Edge : IEquatable<Edge>
+        {
+            public Vector3 v1;
+            public Vector3 v2;
+            public Edge(Vector3 aV1, Vector3 aV2)
+            {
+                v1 = aV1;
+                v2 = aV2;
+            }
+            public override bool Equals(object obj)
+            {
+                if (obj == null)
+                    return false;
+
+                return Equals((Edge)obj);
+            }
+            public bool Equals(Edge other)
+            {
+                if ((Equals(v1, other.v1) && Equals(v2, other.v2)) || (Equals(v1, other.v2) && Equals(v2, other.v1)))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
+        }*/
     }
 }

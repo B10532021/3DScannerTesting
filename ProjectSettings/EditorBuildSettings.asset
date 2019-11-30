@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/3DR4ARCore/Scenes/PlaneDetection.unity
     guid: 77fe2fd786bb8544ca9e63c62e837331
+  - enabled: 1
+    path: Assets/Scenes/ListObj.unity
+    guid: 17d9f63207794204092e4775c988d581
   m_configObjects: {}

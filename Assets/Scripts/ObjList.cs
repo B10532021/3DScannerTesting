@@ -1,13 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using LVonasek;
 
 public class ObjList : MonoBehaviour
 {
     public GameObject buttonTemplate;
-    // Start is called before the first frame update
+    
     void Start()
     {
         string rootPath = Application.persistentDataPath + "/";
@@ -39,5 +38,7 @@ public class ObjList : MonoBehaviour
     public void ButtonClicked(string str)
     {
         Utils.ShowAndroidToastMessage(str);
+        ObjReader.FilePath = str;
+        SceneManager.LoadScene("ViewObj");
     }
 }

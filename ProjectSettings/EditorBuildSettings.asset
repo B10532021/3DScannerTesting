@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ListObj.unity
     guid: 17d9f63207794204092e4775c988d581
+  - enabled: 1
+    path: Assets/Scenes/ViewObj.unity
+    guid: 63e2754f939867f4db3f5abf64dd1079
   m_configObjects: {}

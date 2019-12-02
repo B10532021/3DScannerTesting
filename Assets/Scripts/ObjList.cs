@@ -39,6 +39,5 @@ public class ObjList : MonoBehaviour
     {
         Utils.ShowAndroidToastMessage(str);
         ObjReader.FilePath = str;
-        SceneManager.LoadScene("ViewObj");
     }
 }

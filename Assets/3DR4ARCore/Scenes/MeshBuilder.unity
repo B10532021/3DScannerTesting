@@ -1710,6 +1710,7 @@ MonoBehaviour:
     experimentalTexturing: 0
   vizualisations:
   - {fileID: 1064166471}
+  mesh: {fileID: 1044821381384252, guid: f64a88d1d1aefdb44a49c2336089c695, type: 3}
 --- !u!4 &1064166470
 Transform:
   m_ObjectHideFlags: 0
@@ -1737,7 +1738,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mesh: {fileID: 1044821381384252, guid: f64a88d1d1aefdb44a49c2336089c695, type: 3}
-  sphere: {fileID: 6413706594816077137, guid: 24c950c7e253bab45a35d4effc3c255e, type: 3}
 --- !u!114 &1064166472
 MonoBehaviour:
   m_ObjectHideFlags: 0

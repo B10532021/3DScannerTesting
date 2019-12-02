@@ -5,19 +5,19 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/3DR4ARCore/Scenes/DemoApp.unity
     guid: 919fcfee6d970be41a2f0af6ab1f71d6
-  - enabled: 1
+  - enabled: 0
     path: Assets/3DR4ARCore/Scenes/CubeDemo.unity
     guid: e384b6ba97cf4ea4b88362454fbbe3ed
   - enabled: 1
     path: Assets/3DR4ARCore/Scenes/MeshBuilder.unity
     guid: c3c292ab9deae0248bf11f2efacf0582
-  - enabled: 1
+  - enabled: 0
     path: Assets/3DR4ARCore/Scenes/Minecrafter.unity
     guid: c0fa9e87046673448b3a826bbac23654
-  - enabled: 1
+  - enabled: 0
     path: Assets/3DR4ARCore/Scenes/PlaneDetection.unity
     guid: 77fe2fd786bb8544ca9e63c62e837331
   - enabled: 1

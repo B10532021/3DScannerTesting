@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace LVonasek
@@ -58,7 +59,8 @@ namespace LVonasek
 
         public Dictionary<string, GameObject> gamesObjects = new Dictionary<string, GameObject>();
         public GameObject mesh;
-        private GameObject go;
+        private GameObject insideBoundary;
+        private GameObject outsideBoundary;
         private string filePath;
         private StreamWriter s;
 
@@ -175,7 +177,6 @@ namespace LVonasek
                                 gamesObjects.Add(job.id, gameObject);
                                 
                            }
-                           s.Write("job-id:" + job.id + ", indice count:" + job.indices.Length + "\n");
                         }
                         jobs.RemoveAt(jobs.Count - 1);
                     }
@@ -238,6 +239,8 @@ namespace LVonasek
                 {
                     vizualisation.OnMeshClear();
                 }
+                gamesObjects.Clear();
+                DestroyBoundaries();
                 threadOpClean = false;
             }
             if (threadOpDisable)
@@ -320,13 +323,12 @@ namespace LVonasek
 
         public void DrawBoundaries()
         {
-            List<int> indices = new List<int>();
             Dictionary<Edge, int> edges = new Dictionary<Edge, int>();
-            Dictionary<Vector3, int> vertices = new Dictionary<Vector3, int>();
+            Dictionary<Vector3, int> allVertices = new Dictionary<Vector3, int>();
 
             foreach (var gameObject in gamesObjects)
             {
-                if (gameObject.Value.GetComponent<MeshFilter>().mesh.triangles == null || gameObject.Value.GetComponent<MeshFilter>().mesh.triangles.Length <= 3 || gameObject.Value == null)
+                if (gameObject.Value == null)
                     continue;
 
                 Vector3[] verts = gameObject.Value.GetComponent<MeshFilter>().mesh.vertices;
@@ -338,86 +340,295 @@ namespace LVonasek
                     {
                         triangleVert[j] = verts[inds[i + j]];
 
-                        if(!vertices.ContainsKey(triangleVert[j]))
+                        if(!allVertices.ContainsKey(triangleVert[j]))
                         {
-                            vertices.Add(triangleVert[j], vertices.Count);
+                            allVertices.Add(triangleVert[j], allVertices.Count);
                         }
                     }
 
-                    if (edges.ContainsKey(new Edge(triangleVert[0], triangleVert[1]))) //查看這個邊是否已經出現過，出現過就count + 1, 未出現就初始化這條邊
+                    if (edges.ContainsKey(new Edge(triangleVert[0], triangleVert[1], triangleVert[2]))) //查看這個邊是否已經出現過，出現過就count + 1, 未出現就初始化這條邊
                     {
-                        edges[new Edge(triangleVert[0], triangleVert[1])] += 1;
+                        edges[new Edge(triangleVert[0], triangleVert[1], triangleVert[2])] += 1;
                     }
                     else
                     {
-                        edges.Add(new Edge(triangleVert[0], triangleVert[1]), 1);
+                        edges.Add(new Edge(triangleVert[0], triangleVert[1],triangleVert[2]), 1);
+
                     }
 
-                    if (edges.ContainsKey(new Edge(triangleVert[0], triangleVert[2])))
+                    if (edges.ContainsKey(new Edge(triangleVert[0], triangleVert[2], triangleVert[1])))
                     {
-                        edges[new Edge(triangleVert[0], triangleVert[2])] += 1;
+                        edges[new Edge(triangleVert[0], triangleVert[2], triangleVert[1])] += 1;
                     }
                     else
                     {
-                        edges.Add(new Edge(triangleVert[0], triangleVert[2]), 1);
+                        edges.Add(new Edge(triangleVert[0], triangleVert[2], triangleVert[1]), 1);
                     }
 
-                    if (edges.ContainsKey(new Edge(triangleVert[1], triangleVert[2])))
+                    if (edges.ContainsKey(new Edge(triangleVert[1], triangleVert[2], triangleVert[0])))
                     {
-                        edges[new Edge(triangleVert[1], triangleVert[2])] += 1;
+                        edges[new Edge(triangleVert[1], triangleVert[2], triangleVert[0])] += 1;
                     }
                     else
                     {
-                        edges.Add(new Edge(triangleVert[1], triangleVert[2]), 1);
+                        edges.Add(new Edge(triangleVert[1], triangleVert[2], triangleVert[0]), 1);
                     }
                 }
 
             }
 
+            List<Edge> singleEdges = new List<Edge>();
             foreach (var edge in edges) //等所有的邊都檢查過一次後，把count只有出現一次的邊取出來，並取出這條邊的兩個點在點陣列中的位置，然後丟進indices(用來之後要在mesh裡面把它畫出來)
             {
                 if(edge.Value == 1)
                 {
-                    //indices.Add(vertices.FindIndex(x => Vector3.Equals(x, edge.Key.v1)));
-                    //indices.Add(vertices.FindIndex(x => Vector3.Equals(x, edge.Key.v2)));
-                    indices.Add(vertices[edge.Key.v1]);
-                    indices.Add(vertices[edge.Key.v2]);
+                    singleEdges.Add(edge.Key);
+                    //indices.Add(allVertices[edge.Key.v1]);
+                    //indices.Add(allVertices[edge.Key.v2]);
+                }
+            }
+            edges.Clear();
+
+            List<List<Vector3>> Vertices = new List<List<Vector3>>();
+            List<Vector3> vertices = new List<Vector3>();
+            List<List<Vector3>> ThirdVertices = new List<List<Vector3>>();
+            List<Vector3> thirdvertices = new List<Vector3>();
+            List<List<int>> Indices = new List<List<int>>();
+            List<int> indices = new List<int>();
+
+            vertices.Add(singleEdges[0].v1);
+            vertices.Add(singleEdges[0].v2);
+            indices.Add(allVertices[singleEdges[0].v1]);
+            indices.Add(allVertices[singleEdges[0].v2]);
+            thirdvertices.Add(singleEdges[0].v3);
+            singleEdges.RemoveAt(0);
+            int k = 0;
+            while(singleEdges.Count != 0)
+            {
+                if (Vector3.Equals(singleEdges[k].v1, vertices.Last()))
+                {
+                    indices.Add(allVertices[singleEdges[k].v1]);
+                    indices.Add(allVertices[singleEdges[k].v2]);
+                    vertices.Add(singleEdges[k].v2);
+                    thirdvertices.Add(singleEdges[k].v3);
+                    singleEdges.RemoveAt(k);
+                    k = 0;
+                }
+                else if (Vector3.Equals(singleEdges[k].v2, vertices.Last()))
+                {
+                    indices.Add(allVertices[singleEdges[k].v2]);
+                    indices.Add(allVertices[singleEdges[k].v1]);
+                    vertices.Add(singleEdges[k].v1);
+                    thirdvertices.Add(singleEdges[k].v3);
+                    singleEdges.RemoveAt(k);
+                    k = 0;
+                }
+                else if (k == singleEdges.Count - 1)
+                {
+                    Indices.Add(indices.ToList());
+                    indices.Clear();
+                    Vertices.Add(vertices.ToList());
+                    vertices.Clear();
+                    ThirdVertices.Add(thirdvertices.ToList());
+                    thirdvertices.Clear();
+                    indices.Add(allVertices[singleEdges[0].v1]);
+                    indices.Add(allVertices[singleEdges[0].v2]);
+                    vertices.Add(singleEdges[0].v1);
+                    vertices.Add(singleEdges[0].v2);
+                    thirdvertices.Add(singleEdges[0].v3);
+                    singleEdges.RemoveAt(0);
+                    k = 0;
+                }
+                else
+                {
+                    k += 1;
+                }
+            }
+            Indices.Add(indices.ToList());
+            indices.Clear();
+            Vertices.Add(vertices.ToList());
+            vertices.Clear();
+            ThirdVertices.Add(thirdvertices.ToList());
+            thirdvertices.Clear();
+
+            List<int> indices2 = new List<int>();
+            for(int i = 0; i < Vertices.Count; i++)
+            {
+                if(!PointInsidePolygon(ThirdVertices[i], Vertices[i]))
+                {
+                    Mesh temp = new Mesh();
+                    temp.vertices = Vertices[i].ToArray();
+                    Vector3 center = temp.bounds.center;
+                    allVertices.Add(center,allVertices.Count);
+                    for(int j = 0; j < Vertices[i].Count - 1; j++)
+                    {
+                        indices.Add(allVertices[Vertices[i][j]]);
+                        indices.Add(allVertices[center]);
+                        indices.Add(allVertices[Vertices[i][j + 1]]);
+                        indices.Add(allVertices[Vertices[i][j + 1]]);
+                        indices.Add(allVertices[center]);
+                        indices.Add(allVertices[Vertices[i][j]]);
+                    }
+                    //indices.AddRange(Indices[i]);
+                }   
+                else
+                {
+                    indices2.AddRange(Indices[i]);
                 }
             }
 
-            Vector3[] vertss = new Vector3[vertices.Keys.Count];
-            vertices.Keys.CopyTo(vertss, 0);
+            Vector3[] vertss = new Vector3[allVertices.Keys.Count];
+            allVertices.Keys.CopyTo(vertss, 0);
 
-            // 畫mesh
-            go = Instantiate(mesh);
-            go.SetActive(true);
-            //go.GetComponent<MeshFilter>().mesh.vertices = vertices.ToArray();
-            go.GetComponent<MeshFilter>().mesh.vertices = vertss;
-            go.GetComponent<MeshFilter>().mesh.SetIndices(indices.ToArray(), MeshTopology.Lines, 0, false);
             List<Color> colors = new List<Color>();
-            for(int i = 0; i < vertices.Count; i++)
+            List<Color> colors2 = new List<Color>();
+            for (int i = 0; i < allVertices.Count; i++)
             {
                 colors.Add(Color.red);
+                colors2.Add(Color.blue);
             }
-            go.GetComponent<MeshFilter>().mesh.colors = colors.ToArray();
-            go.transform.position +=  Vector3.up * 0.1f;
+
+            // 畫mesh
+            insideBoundary = Instantiate(mesh);
+            insideBoundary.SetActive(true);
+            insideBoundary.GetComponent<MeshFilter>().mesh.vertices = vertss;
+            insideBoundary.GetComponent<MeshFilter>().mesh.SetIndices(indices.ToArray(), MeshTopology.Triangles, 0, false);
+            insideBoundary.GetComponent<MeshFilter>().mesh.colors = colors.ToArray();
+
+            outsideBoundary = Instantiate(mesh);
+            outsideBoundary.SetActive(true);
+            outsideBoundary.GetComponent<MeshFilter>().mesh.vertices = vertss;
+            outsideBoundary.GetComponent<MeshFilter>().mesh.SetIndices(indices2.ToArray(), MeshTopology.Lines, 0, false);
+            outsideBoundary.GetComponent<MeshFilter>().mesh.colors = colors2.ToArray();
+
         }
 
         public void DestroyBoundaries()
         {
-            Destroy(go);
+            Destroy(insideBoundary);
+            Destroy(outsideBoundary);
+        }
+
+        public bool PointInsidePolygon(List<Vector3> points, List<Vector3> polygon)
+        {
+            if (polygon.Count < 3 || polygon[0] != polygon.Last()) 
+            {
+                return false;
+            }
+
+            int outside = 0;
+            int inside = 0;
+            Vector3 normal = new Vector3(); ;
+            for (int i = 0; i < polygon.Count - 2; i++)
+            {
+                normal += Vector3.Cross(polygon[i] - polygon[i + 1], polygon[i + 2] - polygon[i + 1]);
+            }
+            normal = normal.normalized;
+            List<Vector3> newPolygon = new List<Vector3>();
+            foreach (var vertice in polygon)
+            {
+                newPolygon.Add(Vector3.ProjectOnPlane(vertice, normal));
+            }
+            
+            for(int i = 0; i < points.Count; i++)
+            {
+                Vector3 projectedPoint = Vector3.ProjectOnPlane(points[i], normal);
+
+
+                Vector3 originalOrientation = Orientation(polygon[i], polygon[i+1], points[i]);
+                Vector3 projectedOrientation = Orientation(newPolygon[i], newPolygon[i+1], projectedPoint);
+
+                Vector3 direction = (newPolygon[i] + newPolygon[i+1]) / 2 - projectedPoint;
+                Vector3 extreme = projectedPoint + direction * 100;
+                int count = 0;
+
+                for (int j = 0; j < newPolygon.Count - 1; j++)
+                {
+                    if (DoIntersect(newPolygon[j], newPolygon[j + 1], projectedPoint, extreme))
+                    {
+                        count += 1;
+                    }
+                }
+                if ((count % 2 == 1 && Vector3.Dot(originalOrientation, projectedOrientation) > 0) || (count % 2 == 0 && Vector3.Dot(originalOrientation, projectedOrientation) < 0))
+                {
+                    inside += 1;
+                }
+                else
+                {
+                    outside += 1;
+                }
+            }
+            
+            
+            if(inside > outside)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool DoIntersect(Vector3 edgeV1, Vector3 edgeV2, Vector3 p1, Vector3 p2)
+        {
+            // Find the four orientations needed for  
+            // general and special cases 
+            Vector3 o1 = Orientation(edgeV1, edgeV2, p1);
+            Vector3 o2 = Orientation(edgeV1, edgeV2, p2);
+            Vector3 o3 = Orientation(p1, p2, edgeV1);
+            Vector3 o4 = Orientation(p1, p2, edgeV2);
+
+            // General case 
+            if (Vector3.Dot(o1, o2) < 0 && Vector3.Dot(o3, o4) < 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public Vector3 Orientation(Vector3 v1, Vector3 v2, Vector3 v3)
+        {
+            //float val = (v2.x - v1.x) * (v3.z - v1.z) - (v3.x - v1.x) * (v2.z - v1.z);
+            return Vector3.Cross((v2 - v1), (v3 - v1));
+
+            /*if (val == 0)
+            {
+                return 0; //三點平行
+            }
+            else if (val < 0)
+            {
+                return 1; //順時針
+            }
+            else
+            {
+                return 2; //逆時針
+            }*/
+        }
+
+        public bool OnSegment(Vector3 p, Vector3 q, Vector3 r)
+        {
+            if (q.x <= Math.Max(p.x, r.x) &&
+                q.x >= Math.Min(p.x, r.x) &&
+                q.y <= Math.Max(p.y, r.y) &&
+                q.y >= Math.Min(p.y, r.y))
+            {
+                return true;
+            }
+            return false;
         }
 
         public struct Edge:IEquatable<Edge>
         {
             public Vector3 v1;
             public Vector3 v2;
+            public Vector3 v3; //此三角形第三個點的位置
             private float ID;
-            public Edge(Vector3 aV1, Vector3 aV2){
+            public Edge(Vector3 aV1, Vector3 aV2, Vector3 aV3){
                 v1 = aV1;
                 v2 = aV2;
+                v3 = aV3;
                 ID = (v1 + v2).magnitude + (v1 - v2).magnitude;
             }
+
             public bool Equals(Edge other)
             {
                 if ((Vector3.Equals(this.v1, other.v1) && Vector3.Equals(this.v2, other.v2)) || (Vector3.Equals(this.v1, other.v2) && Vector3.Equals(this.v2, other.v1)))

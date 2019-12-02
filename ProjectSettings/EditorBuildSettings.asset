@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/3DR4ARCore/Scenes/DemoApp.unity
     guid: 919fcfee6d970be41a2f0af6ab1f71d6
   - enabled: 0
@@ -20,4 +20,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/3DR4ARCore/Scenes/PlaneDetection.unity
     guid: 77fe2fd786bb8544ca9e63c62e837331
+  - enabled: 1
+    path: Assets/Scenes/ListObj.unity
+    guid: 17d9f63207794204092e4775c988d581
+  - enabled: 1
+    path: Assets/Scenes/ViewObj.unity
+    guid: 63e2754f939867f4db3f5abf64dd1079
   m_configObjects: {}

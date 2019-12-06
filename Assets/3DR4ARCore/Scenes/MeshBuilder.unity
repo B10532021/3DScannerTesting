@@ -1710,7 +1710,7 @@ MonoBehaviour:
     experimentalTexturing: 0
   vizualisations:
   - {fileID: 1064166471}
-  mesh: {fileID: 1044821381384252, guid: f64a88d1d1aefdb44a49c2336089c695, type: 3}
+  mesh: {fileID: 3381549867609679757, guid: 7dfa0016f8b641349a95f81cb26d6438, type: 3}
 --- !u!4 &1064166470
 Transform:
   m_ObjectHideFlags: 0

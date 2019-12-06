@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 6814526296250680159}
   - component: {fileID: 2655006213977424839}
   m_Layer: 0
-  m_Name: GlowVertice
+  m_Name: TransparentsVertice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7106892491249525160
 Transform:
   m_ObjectHideFlags: 0
@@ -57,7 +57,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9aea6ade397ac1c43b26d0b9b41637dd, type: 2}
+  - {fileID: 2100000, guid: 279658ed255308c46a7ec79978a5bcf2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

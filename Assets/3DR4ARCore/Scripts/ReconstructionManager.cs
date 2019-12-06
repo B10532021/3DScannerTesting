@@ -484,8 +484,8 @@ namespace LVonasek
             List<Color> colors2 = new List<Color>();
             for (int i = 0; i < allVertices.Count; i++)
             {
-                colors.Add(Color.red);
-                colors2.Add(Color.blue);
+                colors.Add(new Color(1f, 1f, 1f, 0.6f));
+                //colors2.Add(Color.blue);
             }
 
             // 畫mesh
@@ -495,11 +495,11 @@ namespace LVonasek
             insideBoundary.GetComponent<MeshFilter>().mesh.SetIndices(indices.ToArray(), MeshTopology.Triangles, 0, false);
             insideBoundary.GetComponent<MeshFilter>().mesh.colors = colors.ToArray();
 
-            outsideBoundary = Instantiate(mesh);
+            /*outsideBoundary = Instantiate(mesh);
             outsideBoundary.SetActive(true);
             outsideBoundary.GetComponent<MeshFilter>().mesh.vertices = vertss;
             outsideBoundary.GetComponent<MeshFilter>().mesh.SetIndices(indices2.ToArray(), MeshTopology.Lines, 0, false);
-            outsideBoundary.GetComponent<MeshFilter>().mesh.colors = colors2.ToArray();
+            outsideBoundary.GetComponent<MeshFilter>().mesh.colors = colors2.ToArray();*/
 
         }
 

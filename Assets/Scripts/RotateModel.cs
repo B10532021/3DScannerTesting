@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using LVonasek;
+﻿using UnityEngine;
+
 public class RotateModel : MonoBehaviour
 {
     private Vector2 lastPos;
@@ -22,10 +20,10 @@ public class RotateModel : MonoBehaviour
                     break;
 
                 case TouchPhase.Moved:
-                    float rotX = deltaposition.y * Time.deltaTime * -1;
-                    float rotY = deltaposition.x * Time.deltaTime * -1;
+                    float rotX = deltaposition.y * rotationSpeed * -1;
+                    float rotY = deltaposition.x * rotationSpeed * -1;
 
-                    transform.eulerAngles += new Vector3(rotX, -rotY, 0f);
+                    transform.eulerAngles += new Vector3(rotX, rotY, 0f);
                     break;
             }
         }

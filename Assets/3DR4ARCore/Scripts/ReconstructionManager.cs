@@ -484,7 +484,7 @@ namespace LVonasek
             List<Color> colors2 = new List<Color>();
             for (int i = 0; i < allVertices.Count; i++)
             {
-                colors.Add(new Color(1f, 1f, 1f, 0.6f));
+                colors.Add(new Color(1f, 0f, 0f, 0.8f));
                 //colors2.Add(Color.blue);
             }
 

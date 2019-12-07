@@ -446,6 +446,7 @@ GameObject:
   - component: {fileID: 308472169}
   - component: {fileID: 308472168}
   - component: {fileID: 308472173}
+  - component: {fileID: 308472174}
   m_Layer: 0
   m_Name: Inner Camera
   m_TagString: Untagged
@@ -559,20 +560,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b046907d6b3d794c8958ce850ff9c69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_firstPersonCamera: {fileID: 0}
---- !u!1 &362663622 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1911835061719270, guid: 343420d4fb3354d47a18f44b869557ae,
-    type: 3}
-  m_PrefabInstance: {fileID: 1995714192}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &362663625
+--- !u!114 &308472174
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 362663622}
+  m_GameObject: {fileID: 308472167}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c957617ccc84b34990f3739aae0a20e, type: 3}
@@ -1250,7 +1244,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 362663625}
+      - m_Target: {fileID: 308472174}
         m_MethodName: IsViewing
         m_Mode: 1
         m_Arguments:
@@ -1710,7 +1704,7 @@ MonoBehaviour:
     experimentalTexturing: 0
   vizualisations:
   - {fileID: 1064166471}
-  mesh: {fileID: 3381549867609679757, guid: 7dfa0016f8b641349a95f81cb26d6438, type: 3}
+  mesh: {fileID: 1044821381384252, guid: f64a88d1d1aefdb44a49c2336089c695, type: 3}
 --- !u!4 &1064166470
 Transform:
   m_ObjectHideFlags: 0
@@ -2305,7 +2299,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 362663625}
+      - m_Target: {fileID: 0}
         m_MethodName: BackToScanning
         m_Mode: 1
         m_Arguments:
@@ -2673,7 +2667,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 362663625}
+      - m_Target: {fileID: 308472174}
         m_MethodName: IsViewing
         m_Mode: 1
         m_Arguments:

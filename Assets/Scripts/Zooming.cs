@@ -28,15 +28,6 @@
             if (Input.touchCount == 2)
             {
                 m_firstPersonCamera.GetComponent<FollowTarget>().distanceToTarget = Zoom();
-                /*if (!viewing)
-                {
-                    
-                }
-                else
-                {
-                    m_firstPersonCamera.GetComponent<FollowTarget>().distanceToTarget = 0;
-
-                }*/
 
             }
         }

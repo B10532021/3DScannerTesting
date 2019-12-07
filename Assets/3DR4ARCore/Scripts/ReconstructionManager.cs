@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -155,6 +156,7 @@ namespace LVonasek
                 arProvider.ResumeSession();
                 Utils.ShowAndroidToastMessage(success ? threadOpSave + " was saved successfully." : "Saving failed!");
                 threadOpSave = null;
+                SceneManager.LoadScene("DemoApp");
             }
 
             DateTime t = DateTime.UtcNow;
@@ -484,7 +486,7 @@ namespace LVonasek
             List<Color> colors2 = new List<Color>();
             for (int i = 0; i < allVertices.Count; i++)
             {
-                colors.Add(new Color(1f, 0f, 0f, 0.8f));
+                colors.Add(Color.red);
                 //colors2.Add(Color.blue);
             }
 
@@ -678,5 +680,6 @@ namespace LVonasek
                 return base.GetHashCode();
             }
         }*/
+
     }
 }

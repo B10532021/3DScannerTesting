@@ -15,8 +15,6 @@ public class PanoView : MonoBehaviour
     private Touch oldTouch;  //上次觸控點1(手指1)
     private Transform camTransform;
     private Transform oldTransform;
-    private DrawBoundary drawBoundary;
-    public GameObject m_firstPersonCamera;
 
     private float xAngle;
     private float yAngle;
@@ -31,8 +29,6 @@ public class PanoView : MonoBehaviour
         move = true;
         rotate = false;
         camTransform = GetComponent<Camera>().transform;
-        m_firstPersonCamera = GameObject.Find("First Person Camera");
-        drawBoundary = new DrawBoundary();
     }
 
     // Update is called once per frame
@@ -67,24 +63,6 @@ public class PanoView : MonoBehaviour
                 this.transform.eulerAngles += new Vector3(rotX, -rotY, 0f);
             }
         }
-        /*else if (Input.touchCount == 2)
-        {
-            Touch touchZero = Input.GetTouch(0);
-            Touch touchOne = Input.GetTouch(1);
-
-            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-            Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
-
-            float prevMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-            float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
-
-            float difference = (currentMagnitude - prevMagnitude) * 0.005f;
-            transform.position += transform.rotation * Vector3.forward * difference;
-            if(GetComponent<Camera>().WorldToScreenPoint(rotateTarget.transform.position).z < 0)
-            {
-                transform.position = rotateTarget.transform.position;
-            }
-        }*/
 
     }
 
@@ -95,7 +73,6 @@ public class PanoView : MonoBehaviour
             panoView = false;
             GetComponent<TrackedPoseDriver>().enabled = true;
             GameObject.Find("First Person Camera").GetComponent<TrackedPoseDriver>().enabled = true;
-            //drawBoundary.DestroyBoundaries();
 
         }
         else
@@ -104,8 +81,6 @@ public class PanoView : MonoBehaviour
             GetComponent<TrackedPoseDriver>().enabled = false;
             GameObject.Find("First Person Camera").GetComponent<TrackedPoseDriver>().enabled = false;
             transform.position = Vector3.forward * 0.5f;
-            // drawBoundary.DrawBoundaries(GameObject.Find("Reconstruction").GetComponent<ReconstructionManager>().meshes);
-            
         }
     }
 
@@ -114,7 +89,6 @@ public class PanoView : MonoBehaviour
         panoView = false;
         GetComponent<TrackedPoseDriver>().enabled = true;
         GameObject.Find("First Person Camera").GetComponent<TrackedPoseDriver>().enabled = true;
-        //drawBoundary.DestroyBoundaries();
     }
     public void MoveMode()
     {

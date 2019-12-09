@@ -75,6 +75,12 @@
             }
         }
 
+        public void ResumeRecording()
+        {
+            viewing = false;
+            m_firstPersonCamera.GetComponent<FollowTarget>().distanceToTarget = oldDistance;
+        }
+
         public void BackToScanning()
         {
             viewing = false;

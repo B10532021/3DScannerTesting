@@ -65,13 +65,13 @@
             if (viewing)
             {
                 viewing = false;
-                m_firstPersonCamera.GetComponent<FollowTarget>().distanceToTarget = oldDistance;
+                m_firstPersonCamera.GetComponent<FollowTarget>().distanceToTarget = 0;
             }
             else
             {
                 viewing = true;
-                oldDistance = m_firstPersonCamera.GetComponent<FollowTarget>().distanceToTarget;
-                m_firstPersonCamera.GetComponent<FollowTarget>().distanceToTarget = 2;
+                //oldDistance = m_firstPersonCamera.GetComponent<FollowTarget>().distanceToTarget;
+                m_firstPersonCamera.GetComponent<FollowTarget>().distanceToTarget = 1.5f;
             }
         }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 using System.IO;
+using UnityEngine.SceneManagement;
 using System.Linq;
 using UnityEngine;
 
@@ -57,13 +57,12 @@ namespace LVonasek
         private bool threadOpPause = false;
         private string threadOpSave = null;
         private bool threadRunning = false;
+        private bool threadSaving = false;
 
         public Dictionary<string, GameObject> gamesObjects = new Dictionary<string, GameObject>();
         public GameObject mesh;
         private GameObject insideBoundary;
-        private GameObject outsideBoundary;
         private string filePath;
-        private StreamWriter s;
 
         private void Start()
         {
@@ -77,7 +76,6 @@ namespace LVonasek
             {
                 File.Delete(filePath);
             }
-            s = new StreamWriter(filePath, true);
         }
 
         private void OnApplicationPause(bool pause)
@@ -99,7 +97,8 @@ namespace LVonasek
             {
                 threadOpEnable = true;
                 DestroyBoundaries();
-            } else
+            }
+            else
             {
                 threadOpDisable = true;
                 DrawBoundaries();
@@ -114,8 +113,34 @@ namespace LVonasek
 
         private void Update()
         {
-            ARState state = arProvider.GetState();
+            //exporting
+            if (threadSaving)
+            {
+                if (plugin.CallStatic<bool>("IsSaveFinished"))
+                {
+                    bool success = plugin.CallStatic<bool>("IsSaveSuccessful");
+                    foreach (Vizualisation vizualisation in vizualisations)
+                    {
+                        vizualisation.OnMeshClear();
+                    }
 
+                    arProvider.ResumeSession();
+                    Utils.ShowAndroidToastMessage(success ? threadOpSave + " was saved successfully." : "Saving failed!");
+                    if (success)
+                    {
+                        ObjReader.FilePath = threadOpSave.Replace(Application.persistentDataPath + "/", "");
+                        SceneManager.LoadScene("ViewObj");
+                    }
+                    threadOpSave = null;
+                    threadSaving = false;
+                    
+                }
+                
+                return;
+            }
+
+            //meshing
+            ARState state = arProvider.GetState();
             if (!threadRunning && state.tracked)
             {
                 ConfigurePlugin();
@@ -143,22 +168,15 @@ namespace LVonasek
                         }
                         plugin.CallStatic("OnProcess");
                         GenerateJobs(count);
-                    } else
+                    }
+                    else
                     {
                         plugin.CallStatic("OnEnd");
                     }
                 }
             }
 
-            if (!string.IsNullOrEmpty(threadOpSave) && !threadOpPause)
-            {
-                bool success = plugin.CallStatic<bool>("Save", threadOpSave);
-                arProvider.ResumeSession();
-                Utils.ShowAndroidToastMessage(success ? threadOpSave + " was saved successfully." : "Saving failed!");
-                threadOpSave = null;
-                SceneManager.LoadScene("DemoApp");
-            }
-
+            //visualize mesh
             DateTime t = DateTime.UtcNow;
             if (threadRunning)
             {
@@ -173,12 +191,12 @@ namespace LVonasek
                         MeshingJob job = jobs[jobs.Count - 1];
                         foreach (Vizualisation vizualisation in vizualisations)
                         {
-                           GameObject gameObject = vizualisation.OnMeshUpdate(job.id, job.vertices, job.normals, job.colors, job.indices);
-                           if (!gamesObjects.ContainsKey(job.id) && gameObject != null)
-                           {
+                            GameObject gameObject = vizualisation.OnMeshUpdate(job.id, job.vertices, job.normals, job.colors, job.indices);
+                            if (!gamesObjects.ContainsKey(job.id) && gameObject != null)
+                            {
                                 gamesObjects.Add(job.id, gameObject);
-                                
-                           }
+
+                            }
                         }
                         jobs.RemoveAt(jobs.Count - 1);
                     }
@@ -188,6 +206,13 @@ namespace LVonasek
                         break;
                     }
                 }
+            }
+
+            //request save mesh
+            if (!string.IsNullOrEmpty(threadOpSave) && !threadOpPause)
+            {
+                plugin.CallStatic("Save", threadOpSave);
+                threadSaving = true;
             }
         }
 
@@ -302,10 +327,10 @@ namespace LVonasek
                         job.colors[i].r = colors[i * 3 + 0] / 255.0f;
                         job.colors[i].g = colors[i * 3 + 1] / 255.0f;
                         job.colors[i].b = colors[i * 3 + 2] / 255.0f;
-                        job.colors[i].a = 0.5f;
-                        //job.colors[i].a = 1.0f;
+                        job.colors[i].a = 1.0f;
                     }
-                } else
+                }
+                else
                 {
                     job.colors = null;
                 }
@@ -342,7 +367,7 @@ namespace LVonasek
                     {
                         triangleVert[j] = verts[inds[i + j]];
 
-                        if(!allVertices.ContainsKey(triangleVert[j]))
+                        if (!allVertices.ContainsKey(triangleVert[j]))
                         {
                             allVertices.Add(triangleVert[j], allVertices.Count);
                         }
@@ -354,7 +379,7 @@ namespace LVonasek
                     }
                     else
                     {
-                        edges.Add(new Edge(triangleVert[0], triangleVert[1],triangleVert[2]), 1);
+                        edges.Add(new Edge(triangleVert[0], triangleVert[1], triangleVert[2]), 1);
 
                     }
 
@@ -382,7 +407,7 @@ namespace LVonasek
             List<Edge> singleEdges = new List<Edge>();
             foreach (var edge in edges) //等所有的邊都檢查過一次後，把count只有出現一次的邊取出來，並取出這條邊的兩個點在點陣列中的位置，然後丟進indices(用來之後要在mesh裡面把它畫出來)
             {
-                if(edge.Value == 1)
+                if (edge.Value == 1)
                 {
                     singleEdges.Add(edge.Key);
                     //indices.Add(allVertices[edge.Key.v1]);
@@ -395,22 +420,16 @@ namespace LVonasek
             List<Vector3> vertices = new List<Vector3>();
             List<List<Vector3>> ThirdVertices = new List<List<Vector3>>();
             List<Vector3> thirdvertices = new List<Vector3>();
-            List<List<int>> Indices = new List<List<int>>();
-            List<int> indices = new List<int>();
 
             vertices.Add(singleEdges[0].v1);
             vertices.Add(singleEdges[0].v2);
-            indices.Add(allVertices[singleEdges[0].v1]);
-            indices.Add(allVertices[singleEdges[0].v2]);
             thirdvertices.Add(singleEdges[0].v3);
             singleEdges.RemoveAt(0);
             int k = 0;
-            while(singleEdges.Count != 0)
+            while (singleEdges.Count != 0)
             {
                 if (Vector3.Equals(singleEdges[k].v1, vertices.Last()))
                 {
-                    indices.Add(allVertices[singleEdges[k].v1]);
-                    indices.Add(allVertices[singleEdges[k].v2]);
                     vertices.Add(singleEdges[k].v2);
                     thirdvertices.Add(singleEdges[k].v3);
                     singleEdges.RemoveAt(k);
@@ -418,8 +437,6 @@ namespace LVonasek
                 }
                 else if (Vector3.Equals(singleEdges[k].v2, vertices.Last()))
                 {
-                    indices.Add(allVertices[singleEdges[k].v2]);
-                    indices.Add(allVertices[singleEdges[k].v1]);
                     vertices.Add(singleEdges[k].v1);
                     thirdvertices.Add(singleEdges[k].v3);
                     singleEdges.RemoveAt(k);
@@ -427,14 +444,10 @@ namespace LVonasek
                 }
                 else if (k == singleEdges.Count - 1)
                 {
-                    Indices.Add(indices.ToList());
-                    indices.Clear();
                     Vertices.Add(vertices.ToList());
                     vertices.Clear();
                     ThirdVertices.Add(thirdvertices.ToList());
                     thirdvertices.Clear();
-                    indices.Add(allVertices[singleEdges[0].v1]);
-                    indices.Add(allVertices[singleEdges[0].v2]);
                     vertices.Add(singleEdges[0].v1);
                     vertices.Add(singleEdges[0].v2);
                     thirdvertices.Add(singleEdges[0].v3);
@@ -446,23 +459,22 @@ namespace LVonasek
                     k += 1;
                 }
             }
-            Indices.Add(indices.ToList());
-            indices.Clear();
+
             Vertices.Add(vertices.ToList());
             vertices.Clear();
             ThirdVertices.Add(thirdvertices.ToList());
             thirdvertices.Clear();
 
-            List<int> indices2 = new List<int>();
-            for(int i = 0; i < Vertices.Count; i++)
+            List<int> indices = new List<int>();
+            for (int i = 0; i < Vertices.Count; i++)
             {
-                if(!PointInsidePolygon(ThirdVertices[i], Vertices[i]))
+                if (!PointInsidePolygon(ThirdVertices[i], Vertices[i]))
                 {
                     Mesh temp = new Mesh();
                     temp.vertices = Vertices[i].ToArray();
                     Vector3 center = temp.bounds.center;
-                    allVertices.Add(center,allVertices.Count);
-                    for(int j = 0; j < Vertices[i].Count - 1; j++)
+                    allVertices.Add(center, allVertices.Count);
+                    for (int j = 0; j < Vertices[i].Count - 1; j++)
                     {
                         indices.Add(allVertices[Vertices[i][j]]);
                         indices.Add(allVertices[center]);
@@ -471,11 +483,7 @@ namespace LVonasek
                         indices.Add(allVertices[center]);
                         indices.Add(allVertices[Vertices[i][j]]);
                     }
-                    //indices.AddRange(Indices[i]);
-                }   
-                else
-                {
-                    indices2.AddRange(Indices[i]);
+                    
                 }
             }
 
@@ -483,11 +491,9 @@ namespace LVonasek
             allVertices.Keys.CopyTo(vertss, 0);
 
             List<Color> colors = new List<Color>();
-            List<Color> colors2 = new List<Color>();
             for (int i = 0; i < allVertices.Count; i++)
             {
                 colors.Add(Color.red);
-                //colors2.Add(Color.blue);
             }
 
             // 畫mesh
@@ -496,24 +502,16 @@ namespace LVonasek
             insideBoundary.GetComponent<MeshFilter>().mesh.vertices = vertss;
             insideBoundary.GetComponent<MeshFilter>().mesh.SetIndices(indices.ToArray(), MeshTopology.Triangles, 0, false);
             insideBoundary.GetComponent<MeshFilter>().mesh.colors = colors.ToArray();
-
-            /*outsideBoundary = Instantiate(mesh);
-            outsideBoundary.SetActive(true);
-            outsideBoundary.GetComponent<MeshFilter>().mesh.vertices = vertss;
-            outsideBoundary.GetComponent<MeshFilter>().mesh.SetIndices(indices2.ToArray(), MeshTopology.Lines, 0, false);
-            outsideBoundary.GetComponent<MeshFilter>().mesh.colors = colors2.ToArray();*/
-
         }
 
         public void DestroyBoundaries()
         {
             Destroy(insideBoundary);
-            Destroy(outsideBoundary);
         }
 
         public bool PointInsidePolygon(List<Vector3> points, List<Vector3> polygon)
         {
-            if (polygon.Count < 3 || polygon[0] != polygon.Last()) 
+            if (polygon.Count < 3 || polygon[0] != polygon.Last())
             {
                 return false;
             }
@@ -531,16 +529,16 @@ namespace LVonasek
             {
                 newPolygon.Add(Vector3.ProjectOnPlane(vertice, normal));
             }
-            
-            for(int i = 0; i < points.Count; i++)
+
+            for (int i = 0; i < points.Count; i++)
             {
                 Vector3 projectedPoint = Vector3.ProjectOnPlane(points[i], normal);
 
 
-                Vector3 originalOrientation = Orientation(polygon[i], polygon[i+1], points[i]);
-                Vector3 projectedOrientation = Orientation(newPolygon[i], newPolygon[i+1], projectedPoint);
+                Vector3 originalOrientation = Orientation(polygon[i], polygon[i + 1], points[i]);
+                Vector3 projectedOrientation = Orientation(newPolygon[i], newPolygon[i + 1], projectedPoint);
 
-                Vector3 direction = (newPolygon[i] + newPolygon[i+1]) / 2 - projectedPoint;
+                Vector3 direction = (newPolygon[i] + newPolygon[i + 1]) / 2 - projectedPoint;
                 Vector3 extreme = projectedPoint + direction * 100;
                 int count = 0;
 
@@ -560,9 +558,9 @@ namespace LVonasek
                     outside += 1;
                 }
             }
-            
-            
-            if(inside > outside)
+
+
+            if (inside > outside)
             {
                 return true;
             }
@@ -589,21 +587,7 @@ namespace LVonasek
 
         public Vector3 Orientation(Vector3 v1, Vector3 v2, Vector3 v3)
         {
-            //float val = (v2.x - v1.x) * (v3.z - v1.z) - (v3.x - v1.x) * (v2.z - v1.z);
             return Vector3.Cross((v2 - v1), (v3 - v1));
-
-            /*if (val == 0)
-            {
-                return 0; //三點平行
-            }
-            else if (val < 0)
-            {
-                return 1; //順時針
-            }
-            else
-            {
-                return 2; //逆時針
-            }*/
         }
 
         public bool OnSegment(Vector3 p, Vector3 q, Vector3 r)
@@ -618,13 +602,19 @@ namespace LVonasek
             return false;
         }
 
-        public struct Edge:IEquatable<Edge>
+        public Vector3 GetMeshCenter()
+        {
+            return insideBoundary.GetComponent<MeshFilter>().mesh.bounds.center;
+        }
+
+        public struct Edge : IEquatable<Edge>
         {
             public Vector3 v1;
             public Vector3 v2;
             public Vector3 v3; //此三角形第三個點的位置
             private float ID;
-            public Edge(Vector3 aV1, Vector3 aV2, Vector3 aV3){
+            public Edge(Vector3 aV1, Vector3 aV2, Vector3 aV3)
+            {
                 v1 = aV1;
                 v2 = aV2;
                 v3 = aV3;
@@ -680,6 +670,5 @@ namespace LVonasek
                 return base.GetHashCode();
             }
         }*/
-
     }
 }

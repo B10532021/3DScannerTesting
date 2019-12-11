@@ -22,7 +22,9 @@ namespace oc {
         void OnSurfaceChanged(int width, int height);
 
         void Clear();
-        bool Save(std::string filename);
+        bool IsSaveFinished();
+        bool IsSaveSuccessful();
+        void Save(std::string filename);
         void SetActive(bool on);
         void SetExtendingPointCloud(bool on);
         void SetFillingHoles(bool on);

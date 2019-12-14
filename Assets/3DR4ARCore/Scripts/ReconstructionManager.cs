@@ -124,6 +124,7 @@ namespace LVonasek
                         vizualisation.OnMeshClear();
                     }
 
+                    Handheld.StopActivityIndicator();
                     arProvider.ResumeSession();
                     Utils.ShowAndroidToastMessage(success ? threadOpSave + " was saved successfully." : "Saving failed!");
                     if (success)
@@ -133,9 +134,7 @@ namespace LVonasek
                     }
                     threadOpSave = null;
                     threadSaving = false;
-                    
                 }
-                
                 return;
             }
 
@@ -211,6 +210,7 @@ namespace LVonasek
             //request save mesh
             if (!string.IsNullOrEmpty(threadOpSave) && !threadOpPause)
             {
+                Handheld.StartActivityIndicator();
                 plugin.CallStatic("Save", threadOpSave);
                 threadSaving = true;
             }

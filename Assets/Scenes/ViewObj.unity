@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43667546, g: 0.48427135, b: 0.5645225, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366757, g: 0.48427194, b: 0.5645252, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -367,19 +367,19 @@ MonoBehaviour:
   objectName: MyObject
   importOptions:
     zUp: 0
-    litDiffuse: 0
-    convertToDoubleSided: 0
+    litDiffuse: 1
+    convertToDoubleSided: 1
     modelScaling: 0.5
-    reuseLoaded: 0
+    reuseLoaded: 1
     inheritLayer: 0
     buildColliders: 0
     colliderConvex: 0
     colliderTrigger: 0
     use32bitIndices: 1
     hideWhileLoading: 0
-    localPosition: {x: 0, y: 0, z: 0}
+    localPosition: {x: 0, y: 1, z: 0}
     localEulerAngles: {x: 0, y: 0, z: 0}
-    localScale: {x: 1, y: 1, z: 1}
+    localScale: {x: 0.5, y: 0.5, z: 0.5}
   pathSettings: {fileID: 388355543}
 --- !u!114 &388355543
 MonoBehaviour:

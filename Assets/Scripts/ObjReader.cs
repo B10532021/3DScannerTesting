@@ -26,14 +26,17 @@ public class ObjReader : MonoBehaviour
             if (objImporter == null)
             {
                 objImporter = gameObject.AddComponent<ObjectImporter>();
-                objImporter.ImportingStart += () => { Handheld.StartActivityIndicator(); };
-                objImporter.ImportedModel += (gameObject, name) =>
-                {
-                    var rotateModel = gameObject.AddComponent<RotateModel>();
-                    rotateModel.rotationSpeed = GetComponent<RotateModel>().rotationSpeed;
-                    Handheld.StopActivityIndicator();
-                };
             }
+
+            objImporter.ImportingStart += () => { Handheld.StartActivityIndicator(); };
+            objImporter.ImportedModel += (baseModel, name) =>
+            {
+                var model = baseModel.transform.GetChild(0);
+                var center = model.GetComponent<MeshFilter>().mesh.bounds.center;
+                model.transform.position = -center;
+                Handheld.StopActivityIndicator();
+            };
+            objImporter.ImportError += (err) => { Utils.ShowAndroidToastMessage(err); };
         }
         else
         {
@@ -43,7 +46,7 @@ public class ObjReader : MonoBehaviour
 
     private void Start()
     {
-        objImporter.ImportModelAsync(objectName, FilePath, null, importOptions);
+        objImporter.ImportModelAsync(objectName, FilePath, transform, importOptions);
     }
 
     private void OnValidate()

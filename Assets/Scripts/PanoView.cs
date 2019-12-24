@@ -49,7 +49,8 @@ public class PanoView : MonoBehaviour
                 //單點觸控， 水平上下移動 改成rotation的x, y, z移動
                 
                 Vector3 deltaXZ = -transform.right * deltaposition.x * 0.003f;
-                Vector3 deltaXY = Vector3.down * deltaposition.y * 0.003f;
+                // Vector3 deltaXY = Vector3.down * deltaposition.y * 0.003f;
+                Vector3 deltaXY = -transform.up * deltaposition.y * 0.003f;
                 Vector3 deltaTotal = deltaXZ + deltaXY;
                 transform.position += deltaTotal;
             }

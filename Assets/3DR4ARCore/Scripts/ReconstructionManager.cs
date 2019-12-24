@@ -473,10 +473,8 @@ namespace LVonasek
                     Mesh temp = new Mesh();
                     temp.vertices = Vertices[i].ToArray();
                     Vector3 center = temp.bounds.center;
-                    List<int> tempIndices = new List<int>();
-                    float area = 0f;
                     allVertices.Add(center, allVertices.Count);
-                    /* for (int j = 0; j < Vertices[i].Count - 1; j++)
+                    for (int j = 0; j < Vertices[i].Count - 1; j++)
                     {
                         indices.Add(allVertices[Vertices[i][j]]);
                         indices.Add(allVertices[center]);
@@ -484,8 +482,9 @@ namespace LVonasek
                         indices.Add(allVertices[Vertices[i][j + 1]]);
                         indices.Add(allVertices[center]);
                         indices.Add(allVertices[Vertices[i][j]]);
-                        //area += Vector3.Cross(Vertices[i][j] - center, Vertices[i][j + 1] - center).magnitude * 0.5f;
-                    }*/
+                    }
+                    /* float area = 0f;
+                    List<int> tempIndices = new List<int>();
                     for (int j = 0; j < Vertices[i].Count - 1; j++)
                     {
                         tempIndices.Add(allVertices[Vertices[i][j]]);
@@ -503,7 +502,7 @@ namespace LVonasek
                     else
                     {
                         allVertices.Remove(center);
-                    }
+                    }*/
                 }
             }
 

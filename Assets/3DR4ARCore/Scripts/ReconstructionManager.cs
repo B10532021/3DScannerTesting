@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace LVonasek
 {
@@ -119,11 +120,6 @@ namespace LVonasek
                 if (plugin.CallStatic<bool>("IsSaveFinished"))
                 {
                     bool success = plugin.CallStatic<bool>("IsSaveSuccessful");
-                    foreach (Vizualisation vizualisation in vizualisations)
-                    {
-                        vizualisation.OnMeshClear();
-                    }
-
                     Handheld.StopActivityIndicator();
                     arProvider.ResumeSession();
                     Utils.ShowAndroidToastMessage(success ? threadOpSave + " was saved successfully." : "Saving failed!");
@@ -210,7 +206,14 @@ namespace LVonasek
             //request save mesh
             if (!string.IsNullOrEmpty(threadOpSave) && !threadOpPause)
             {
+                foreach (Vizualisation vizualisation in vizualisations)
+                {
+                    vizualisation.OnMeshClear();
+                }
+                GameObject.Find("UI").SetActive(false);
+                GameObject.Find("SavingCanvas").GetComponentInChildren<Text>().text = "Saving...\nDo not turn off the app";
                 Handheld.StartActivityIndicator();
+
                 plugin.CallStatic("Save", threadOpSave);
                 threadSaving = true;
             }

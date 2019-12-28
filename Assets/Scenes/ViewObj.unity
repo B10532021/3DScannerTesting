@@ -460,7 +460,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.24705884, g: 0.24705884, b: 0.24705884, a: 0}
+  m_BackGroundColor: {r: 0.07058824, g: 0.07058824, b: 0.07058824, a: 0}
   m_projectionMatrixMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
@@ -620,10 +620,10 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.3764706}
     m_HighlightedColor: {r: 0.45882356, g: 0.45882356, b: 0.45882356, a: 1}
     m_PressedColor: {r: 0.45882356, g: 0.45882356, b: 0.45882356, a: 1}
-    m_DisabledColor: {r: 0.45882356, g: 0.45882356, b: 0.45882356, a: 0.5019608}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 0.84313726}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -855,10 +855,10 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.3764706}
     m_HighlightedColor: {r: 0.45882356, g: 0.45882356, b: 0.45882356, a: 1}
     m_PressedColor: {r: 0.45882356, g: 0.45882356, b: 0.45882356, a: 1}
-    m_DisabledColor: {r: 0.45882356, g: 0.45882356, b: 0.45882356, a: 0.5019608}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 0.84313726}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:

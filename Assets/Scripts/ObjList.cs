@@ -6,7 +6,8 @@ using LVonasek;
 public class ObjList : MonoBehaviour
 {
     public GameObject buttonTemplate;
-    
+
+    public GameObject blankTemplate;
     void Start()
     {
         string rootPath = Application.persistentDataPath + "/";
@@ -28,6 +29,9 @@ public class ObjList : MonoBehaviour
                     go.transform.SetParent(buttonTemplate.transform.parent);
                 }
             }
+            var blank = Instantiate(blankTemplate) as GameObject;
+            blank.SetActive(true);
+            blank.transform.SetParent(blankTemplate.transform.parent);
         }
         catch (System.Exception e)
         {

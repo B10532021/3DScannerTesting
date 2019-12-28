@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class GuideUI : MonoBehaviour
 {
@@ -16,6 +17,21 @@ public class GuideUI : MonoBehaviour
     private int count;
     // Start is called before the first frame update
 
+    /// <summary>
+    /// The raw image where the video will be played.
+    /// </summary>
+    public RawImage RawImage;
+    public RawImage RawImage3;
+
+    /// <summary>
+    /// The video player component to be played.
+    /// </summary>
+    public VideoPlayer VideoPlayer;
+    public VideoPlayer VideoPlayer3;
+
+    private Texture m_RawImageTexture;
+    private Texture m_RawImageTexture3;
+
     public void RightClick()
     {
         if (count == 1)
@@ -25,6 +41,10 @@ public class GuideUI : MonoBehaviour
             count++;
             leftButton.enabled = true;
             leftButton.gameObject.SetActive(true);
+            
+            VideoPlayer.Stop();
+            RawImage.texture = m_RawImageTexture;
+            VideoPlayer.enabled = false;
         }
         else if (count == 2)
         {
@@ -34,6 +54,9 @@ public class GuideUI : MonoBehaviour
             rightButton.enabled = false;
             rightButton.gameObject.SetActive(false);
             skipButton.GetComponentInChildren<Text>().text = "Done";
+
+            VideoPlayer3.enabled = true;
+            VideoPlayer3.Play();
         }
     }
 
@@ -46,6 +69,9 @@ public class GuideUI : MonoBehaviour
             count--;
             leftButton.enabled = false;
             leftButton.gameObject.SetActive(false);
+
+            VideoPlayer.enabled = true;
+            VideoPlayer.Play();
         }
         else if (count == 3)
         {
@@ -54,11 +80,17 @@ public class GuideUI : MonoBehaviour
             count--;
             rightButton.enabled = true;
             rightButton.gameObject.SetActive(true);
+
+            VideoPlayer3.Stop();
+            RawImage3.texture = m_RawImageTexture3;
+            VideoPlayer3.enabled = false;
         }
     }
 
     public void SkipClick()
     {
+        VideoPlayer.Stop();
+        VideoPlayer3.Stop();
         guideMask.enabled = false;
         guide.enabled = false;
     }
@@ -92,11 +124,31 @@ public class GuideUI : MonoBehaviour
         step1.GetComponent<Text>().enabled = true;
         step2.GetComponent<Text>().enabled = false;
         step3.GetComponent<Text>().enabled = false;
+
+        VideoPlayer.enabled = false;
+        VideoPlayer3.enabled = false;
+        m_RawImageTexture = RawImage.texture;
+        m_RawImageTexture3 = RawImage3.texture;
+        VideoPlayer.prepareCompleted += _PrepareCompleted;
+        VideoPlayer3.prepareCompleted += _PrepareCompleted3;
+
+        VideoPlayer.enabled = true;
+        VideoPlayer.Play();
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    private void _PrepareCompleted(VideoPlayer player)
+    {
+        RawImage.texture = player.texture;
+    }
+
+    private void _PrepareCompleted3(VideoPlayer player)
+    {
+        RawImage3.texture = player.texture;
     }
 }

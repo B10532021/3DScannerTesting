@@ -45,6 +45,9 @@ public class GuideUI : MonoBehaviour
             VideoPlayer.Stop();
             RawImage.texture = m_RawImageTexture;
             VideoPlayer.enabled = false;
+
+            VideoPlayer3.enabled = true;
+            VideoPlayer3.Play();
         }
         else if (count == 2)
         {
@@ -55,8 +58,9 @@ public class GuideUI : MonoBehaviour
             rightButton.gameObject.SetActive(false);
             skipButton.GetComponentInChildren<Text>().text = "Done";
 
-            VideoPlayer3.enabled = true;
-            VideoPlayer3.Play();
+            VideoPlayer3.Stop();
+            RawImage3.texture = m_RawImageTexture3;
+            VideoPlayer3.enabled = false;
         }
     }
 
@@ -70,6 +74,10 @@ public class GuideUI : MonoBehaviour
             leftButton.enabled = false;
             leftButton.gameObject.SetActive(false);
 
+            VideoPlayer3.Stop();
+            RawImage3.texture = m_RawImageTexture3;
+            VideoPlayer3.enabled = false;
+
             VideoPlayer.enabled = true;
             VideoPlayer.Play();
         }
@@ -81,9 +89,8 @@ public class GuideUI : MonoBehaviour
             rightButton.enabled = true;
             rightButton.gameObject.SetActive(true);
 
-            VideoPlayer3.Stop();
-            RawImage3.texture = m_RawImageTexture3;
-            VideoPlayer3.enabled = false;
+            VideoPlayer3.enabled = true;
+            VideoPlayer3.Play();
         }
     }
 
@@ -127,23 +134,24 @@ public class GuideUI : MonoBehaviour
     void Start()
     {
         count = 1;
-        leftButton.enabled = false;
-        leftButton.gameObject.SetActive(false);
-        rightButton.enabled = true;
-        rightButton.gameObject.SetActive(true);
-        step1.GetComponent<Text>().enabled = true;
-        step2.GetComponent<Text>().enabled = false;
-        step3.GetComponent<Text>().enabled = false;
+        SkipClick();
+        //leftButton.enabled = false;
+        //leftButton.gameObject.SetActive(false);
+        //rightButton.enabled = true;
+        //rightButton.gameObject.SetActive(true);
+        //step1.GetComponent<Text>().enabled = true;
+        //step2.GetComponent<Text>().enabled = false;
+        //step3.GetComponent<Text>().enabled = false;
 
-        VideoPlayer.enabled = false;
-        VideoPlayer3.enabled = false;
-        m_RawImageTexture = RawImage.texture;
-        m_RawImageTexture3 = RawImage3.texture;
-        VideoPlayer.prepareCompleted += _PrepareCompleted;
-        VideoPlayer3.prepareCompleted += _PrepareCompleted3;
+        //VideoPlayer.enabled = false;
+        //VideoPlayer3.enabled = false;
+        //m_RawImageTexture = RawImage.texture;
+        //m_RawImageTexture3 = RawImage3.texture;
+        //VideoPlayer.prepareCompleted += _PrepareCompleted;
+        //VideoPlayer3.prepareCompleted += _PrepareCompleted3;
 
-        VideoPlayer.enabled = true;
-        VideoPlayer.Play();
+        //VideoPlayer.enabled = true;
+        //VideoPlayer.Play();
     }
 
     // Update is called once per frame

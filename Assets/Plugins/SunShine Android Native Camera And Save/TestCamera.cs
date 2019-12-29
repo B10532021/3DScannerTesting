@@ -19,16 +19,9 @@ public class TestCamera : MonoBehaviour
 
     [SerializeField] private GameObject _saveBtn;
 
-    [SerializeField] private GameObject _previewCanvas;
-
-    private string logfilePath;
-
     private void Start()
     {
         _saveBtn.SetActive(false);
-        _previewObject.SetActive(false);
-        _previewCanvas.SetActive(false);
-        logfilePath = Application.persistentDataPath + "/Log.txt";
     }
     public void TakePicture()
     {
@@ -36,27 +29,9 @@ public class TestCamera : MonoBehaviour
         {
             if (success)
             {
-                StreamWriter write = new StreamWriter(logfilePath, true);
-                write.WriteLine("Success");
-                write.Close();
-
                 filePath = path;
                 _saveBtn.SetActive(true);
-                try
-                {
-                    StartCoroutine(PreviewFile(path));
-                }
-                catch (System.Exception e)
-                {
-                    StreamWriter writer = new StreamWriter(logfilePath, true);
-                    writer.WriteLine(e.Message);
-                    writer.Close();
-                }
-            }
-            else {
-                StreamWriter writer = new StreamWriter(logfilePath, true);
-                writer.WriteLine("Not Success");
-                writer.Close();
+                StartCoroutine(PreviewFile(path));
             }
         }));
     }

@@ -20,7 +20,7 @@ public class SunshineNativeCameraHandler : MonoBehaviour
      private const string FOLDER_CREATE_METHOD_NAME = "CreateFolder";
 
 
-    private const string FileProviderName = "com.GameLab.ScanUI";
+    private const string FileProviderName = "com.SmileSoft.CaptureAndSave";
 
 
     public delegate void OnTakePictureCallbackHandler(bool success, string path);

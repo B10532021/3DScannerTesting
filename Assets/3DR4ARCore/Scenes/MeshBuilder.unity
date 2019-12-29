@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311918, g: 0.3807398, b: 0.35872716, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -216,8 +216,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   step1: {fileID: 1639301520}
-  step2: {fileID: 689515142}
-  step3: {fileID: 388270331}
+  step2: {fileID: 388270331}
+  step3: {fileID: 689515142}
   rightButton: {fileID: 86402632}
   leftButton: {fileID: 1355320107}
   skipButton: {fileID: 2112459908}
@@ -1317,7 +1317,7 @@ GameObject:
   - component: {fileID: 388270332}
   - component: {fileID: 388270331}
   m_Layer: 9
-  m_Name: Steo3Text
+  m_Name: Steo2Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1335,7 +1335,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1161596165}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1364,7 +1364,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 80
+    m_FontSize: 79
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 8
@@ -1375,7 +1375,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Step 3: Please face your camera to the red triangles until they all disappear.'
+  m_Text: "\u7B2C\u4E8C\u6B65: \u6309\u4E0B\u66AB\u505C\u7684\u6309\u9215\u5F8C\uFF0C\u5982\u679C\u6709\u770B\u5230\u7D05\u8272\u7684\u5340\u584A\uFF0C\u518D\u6B21\u6383\u63CF\u8A72\u5340\u57DF"
 --- !u!222 &388270332
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1988,7 +1988,7 @@ GameObject:
   - component: {fileID: 689515143}
   - component: {fileID: 689515142}
   m_Layer: 9
-  m_Name: Step2Text
+  m_Name: Step3Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2006,7 +2006,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1161596165}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2046,9 +2046,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Step 2: Please press "Take Photo" button on the top of the screen and take
-    traffic signs photos as evidence. For example, speed limit sign or no left turn
-    sign.'
+  m_Text: "\u7B2C\u4E09\u6B65:  \u6309\u4E0B\u87A2\u5E55\u5DE6\u4E0A\u65B9\u7684\u62CD\u7167\u6309\u9215\uFF0C\u5C0D\u73FE\u5834\u9032\u884C\u62CD\u7167\u8490\u8B49\uFF0C\u4F8B\u5982\u8ECA\u640D\u3001\u901F\u9650\u62DB\u724C\u3001\u7981\u6B62\u5DE6\u8F49\u62DB\u724C"
 --- !u!222 &689515143
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3741,8 +3739,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1639301519}
-  - {fileID: 689515141}
   - {fileID: 388270330}
+  - {fileID: 689515141}
   - {fileID: 86402631}
   - {fileID: 1355320106}
   - {fileID: 2112459907}
@@ -3861,7 +3859,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Skip
+  m_Text: "\u8DF3\u904E"
 --- !u!222 &1170263404
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5043,7 +5041,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Step 1: Please orbit and face your camera to the traffic accident sence.\r"
+  m_Text: "\u7B2C\u4E00\u6B65: \u8ACB\u74B0\u62CD\u4E8B\u6545\u73FE\u5834"
 --- !u!222 &1639301521
 CanvasRenderer:
   m_ObjectHideFlags: 0

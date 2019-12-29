@@ -107,6 +107,16 @@ public class GuideUI : MonoBehaviour
         step3.GetComponent<Text>().enabled = false;
         guideMask.enabled = true;
         guide.enabled = true;
+
+        VideoPlayer.enabled = false;
+        VideoPlayer3.enabled = false;
+        m_RawImageTexture = RawImage.texture;
+        m_RawImageTexture3 = RawImage3.texture;
+        VideoPlayer.prepareCompleted += _PrepareCompleted;
+        VideoPlayer3.prepareCompleted += _PrepareCompleted3;
+
+        VideoPlayer.enabled = true;
+        VideoPlayer.Play();
     }
 
     public void TakePhotoClick()

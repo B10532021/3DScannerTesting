@@ -46,19 +46,19 @@ public class TestCamera : MonoBehaviour
                 _saveBtn.SetActive(true);
                 StartCoroutine(PreviewFile(path));
             }
-          
+
         }));
     }
 
 
     IEnumerator PreviewFile(string url)
     {
-       
+
         if (url.Contains(".mp4"))
         {
             url = "File://" + url;
             VideoPlayer videoPlayer = _previewObject.GetComponent<VideoPlayer>();
-         
+
             videoPlayer.playOnAwake = true;
             videoPlayer.source = VideoSource.Url;
             videoPlayer.url = url;
@@ -75,11 +75,11 @@ public class TestCamera : MonoBehaviour
             RawImage image = _previewObject.GetComponent<RawImage>();
             image.texture = videoPlayer.texture;
             videoPlayer.Play();
-           // playIcon.SetActive(true);
-             while (videoPlayer.isPlaying)
-             {
-                 yield return null;
-             }
+            // playIcon.SetActive(true);
+            while (videoPlayer.isPlaying)
+            {
+                yield return null;
+            }
         }
         else
         {
@@ -108,7 +108,7 @@ public class TestCamera : MonoBehaviour
     IEnumerator SaveFile(string CurrentFilePath, string SavedFilePath)
     {
         WWW www = new WWW("File://" + CurrentFilePath); // because Local Storage
-        yield return www;   
+        yield return www;
         System.IO.File.WriteAllBytes(SavedFilePath, www.bytes);
     }
 
@@ -118,11 +118,11 @@ public class TestCamera : MonoBehaviour
 
         string storedPath;
         if (filePath.Contains(".mp4"))
-             storedPath = new_Folder_Path + "/" + videoFileName;
+            storedPath = new_Folder_Path + "/" + videoFileName;
         else
             storedPath = new_Folder_Path + "/" + imageFileName;
 
-       StartCoroutine(SaveFile(filePath, storedPath));
-    
+        StartCoroutine(SaveFile(filePath, storedPath));
+
     }
 }

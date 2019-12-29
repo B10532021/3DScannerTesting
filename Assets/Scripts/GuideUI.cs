@@ -2,6 +2,9 @@
 using UnityEngine.UI;
 using UnityEngine.Video;
 
+using GoogleARCore;
+using GoogleARCoreInternal;
+
 public class GuideUI : MonoBehaviour
 {
     public Text step1;
@@ -31,6 +34,8 @@ public class GuideUI : MonoBehaviour
 
     private Texture m_RawImageTexture;
     private Texture m_RawImageTexture3;
+
+    public GameObject gameController;
 
     public void RightClick()
     {
@@ -126,9 +131,27 @@ public class GuideUI : MonoBehaviour
         VideoPlayer.Play();
     }
 
+    private const string ENGINE_ID = "3DR4ARCORE_Engine";
+
+    public enum ARSDK
+    {
+        NONE,
+        ARCORE,
+        ARENGINE,
+    };
+
+    public ARSDK GetSelectedAR()
+    {
+        return (ARSDK)PlayerPrefs.GetInt(ENGINE_ID, (int)ARSDK.ARCORE);
+    }
+
     public void TakePhotoClick()
     {
-
+        if (GetSelectedAR() == ARSDK.ARCORE)
+            LifecycleManager.Instance.DisableSession();
+        gameController.GetComponent<TestCamera>().TakePicture();
+        if (GetSelectedAR() == ARSDK.ARCORE)
+            LifecycleManager.Instance.EnableSession();
     }
 
     void Start()

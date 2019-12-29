@@ -211,7 +211,7 @@ namespace LVonasek
                     vizualisation.OnMeshClear();
                 }
                 GameObject.Find("UI").SetActive(false);
-                GameObject.Find("SavingCanvas").GetComponentInChildren<Text>().text = "Saving...\nDo not turn off the app";
+                GameObject.Find("SavingCanvas").GetComponentInChildren<Text>().text = "儲存中...\n不要關閉應用程式";
                 Handheld.StartActivityIndicator();
 
                 plugin.CallStatic("Save", threadOpSave);

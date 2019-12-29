@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using LVonasek;
 
 public class ObjList : MonoBehaviour
@@ -41,7 +40,6 @@ public class ObjList : MonoBehaviour
 
     public void ButtonClicked(string str)
     {
-        Utils.ShowAndroidToastMessage(str);
         ObjReader.FilePath = str;
     }
 }

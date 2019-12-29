@@ -2,6 +2,7 @@
 using UnityEngine;
 using AsImpL;
 using LVonasek;
+using UnityEngine.UI;
 
 public class ObjReader : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class ObjReader : MonoBehaviour
 
     private ObjectImporter objImporter;
 
+    public Text loadingText;
 
     private void Awake()
     {
@@ -34,6 +36,7 @@ public class ObjReader : MonoBehaviour
                 var model = baseModel.transform.GetChild(0);
                 var center = model.GetComponent<MeshFilter>().mesh.bounds.center;
                 model.transform.position = -center;
+                loadingText.enabled = false;
                 Handheld.StopActivityIndicator();
             };
             objImporter.ImportError += (err) => { Utils.ShowAndroidToastMessage(err); };

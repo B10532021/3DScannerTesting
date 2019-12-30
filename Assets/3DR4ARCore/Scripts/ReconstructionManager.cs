@@ -60,6 +60,9 @@ namespace LVonasek
         private bool threadRunning = false;
         private bool threadSaving = false;
 
+        //drawboundaries
+        private bool startdrawing = false;
+
         public Dictionary<string, GameObject> gamesObjects = new Dictionary<string, GameObject>();
         public GameObject mesh;
         private GameObject insideBoundary;
@@ -102,7 +105,7 @@ namespace LVonasek
             else
             {
                 threadOpDisable = true;
-                DrawBoundaries();
+                //DrawBoundaries();
             }
         }
 
@@ -137,6 +140,13 @@ namespace LVonasek
                     }
                 }
                 return;
+            }
+
+            if (startdrawing)
+            {
+                DrawBoundaries();
+                GameObject.Find("SavingCanvas").GetComponentInChildren<Text>().text = null;
+                startdrawing = false;
             }
 
             //meshing
@@ -222,6 +232,8 @@ namespace LVonasek
                 plugin.CallStatic("Save", threadOpSave);
                 threadSaving = true;
             }
+
+            
         }
 
         private void ConfigurePlugin()
@@ -281,6 +293,8 @@ namespace LVonasek
             if (threadOpDisable)
             {
                 plugin.CallStatic("SetActive", false);
+                GameObject.Find("SavingCanvas").GetComponentInChildren<Text>().text = "計算空洞中...";
+                startdrawing = true;
                 threadOpDisable = false;
             }
             if (threadOpEnable)
@@ -482,7 +496,7 @@ namespace LVonasek
                     temp.vertices = Vertices[i].ToArray();
                     Vector3 center = temp.bounds.center;
                     allVertices.Add(center, allVertices.Count);
-                    for (int j = 0; j < Vertices[i].Count - 1; j++)
+                    /*for (int j = 0; j < Vertices[i].Count - 1; j++)
                     {
                         indices.Add(allVertices[Vertices[i][j]]);
                         indices.Add(allVertices[center]);
@@ -490,8 +504,8 @@ namespace LVonasek
                         indices.Add(allVertices[Vertices[i][j + 1]]);
                         indices.Add(allVertices[center]);
                         indices.Add(allVertices[Vertices[i][j]]);
-                    }
-                    /* float area = 0f;
+                    }*/
+                    float area = 0f;
                     List<int> tempIndices = new List<int>();
                     for (int j = 0; j < Vertices[i].Count - 1; j++)
                     {
@@ -503,14 +517,14 @@ namespace LVonasek
                         tempIndices.Add(allVertices[Vertices[i][j]]);
                         area += Vector3.Cross(Vertices[i][j]-center, Vertices[i][j+1]-center).magnitude * 0.5f;
                     }
-                    if(area >= 0.09)
+                    if(area >= 0.01)
                     {
                         indices.AddRange(tempIndices);
                     }
                     else
                     {
                         allVertices.Remove(center);
-                    }*/
+                    }
                 }
             }
 

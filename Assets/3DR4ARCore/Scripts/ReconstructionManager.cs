@@ -119,17 +119,22 @@ namespace LVonasek
             {
                 if (plugin.CallStatic<bool>("IsSaveFinished"))
                 {
-                    bool success = plugin.CallStatic<bool>("IsSaveSuccessful");
                     Handheld.StopActivityIndicator();
-                    arProvider.ResumeSession();
-                    Utils.ShowAndroidToastMessage(success ? threadOpSave + " was saved successfully." : "Saving failed!");
+
+                    bool success = plugin.CallStatic<bool>("IsSaveSuccessful");
                     if (success)
                     {
                         ObjReader.FilePath = threadOpSave.Replace(Application.persistentDataPath + "/", "");
                         SceneManager.LoadScene("ViewObj");
                     }
-                    threadOpSave = null;
-                    threadSaving = false;
+                    else
+                    {
+                        Utils.ShowAndroidToastMessage("儲存失敗");
+                        arProvider.ResumeSession();
+                        threadOpSave = null;
+                        threadSaving = false;
+                        SceneManager.LoadScene("Meshbuilder");
+                    }
                 }
                 return;
             }

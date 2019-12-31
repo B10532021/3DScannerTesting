@@ -19,8 +19,11 @@ public class ObjReader : MonoBehaviour
 
     public Text loadingText;
 
+    private string screenshotname = null;
+
     private void Awake()
     {
+        screenshotname = FilePath;
         FilePath = pathSettings.RootPath + FilePath;
         if (File.Exists(FilePath))
         {
@@ -38,6 +41,10 @@ public class ObjReader : MonoBehaviour
                 model.transform.position = -center;
                 loadingText.enabled = false;
                 Handheld.StopActivityIndicator();
+                if (!File.Exists(Application.persistentDataPath + '/' + screenshotname.Replace("obj", "png")))
+                {
+                    ScreenCapture.CaptureScreenshot(screenshotname.Replace("obj", "png"));
+                }
             };
             objImporter.ImportError += (err) => { Utils.ShowAndroidToastMessage(err); };
         }

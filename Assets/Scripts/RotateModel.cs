@@ -19,7 +19,8 @@ public class RotateModel : MonoBehaviour
                 //單點觸控， 水平上下移動 改成rotation的x, y, z移動
 
                 Vector3 deltaXZ = -transform.right * -deltaposition.x * movementSpeed;
-                Vector3 deltaXY = Vector3.down * -deltaposition.y * movementSpeed;
+                //Vector3 deltaXY = Vector3.down * -deltaposition.y * movementSpeed;
+                Vector3 deltaXY = -transform.up * -deltaposition.y * movementSpeed;
                 Vector3 deltaTotal = deltaXZ + deltaXY;
                 transform.position += deltaTotal;
             }

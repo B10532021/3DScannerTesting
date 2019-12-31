@@ -101,6 +101,7 @@ namespace LVonasek
             {
                 threadOpEnable = true;
                 DestroyBoundaries();
+                GameObject.Find("SavingCanvas").GetComponentInChildren<Text>().text = null;
             }
             else
             {
@@ -231,6 +232,8 @@ namespace LVonasek
 
                 plugin.CallStatic("Save", threadOpSave);
                 threadSaving = true;
+
+                DestroyBoundaries();
             }
 
             

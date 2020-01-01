@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2035,7 +2035,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: f66655b38428d40769e9e41ee237cbdc, type: 3}
-    m_FontSize: 70
+    m_FontSize: 62
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 6
@@ -2046,7 +2046,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u7B2C\u4E09\u6B65:  \u6309\u4E0B\u87A2\u5E55\u5DE6\u4E0A\u65B9\u7684\u62CD\u7167\u6309\u9215\uFF0C\u5C0D\u73FE\u5834\u9032\u884C\u62CD\u7167\u8490\u8B49\uFF0C\u4F8B\u5982\u8ECA\u640D\u3001\u901F\u9650\u62DB\u724C\u3001\u7981\u6B62\u5DE6\u8F49\u62DB\u724C"
+  m_Text: "\u7B2C\u4E09\u6B65:  \u5B8C\u6210\u88DC\u62CD\u4E4B\u5F8C\u5C31\u53EF\u4EE5\u5132\u5B58\u7D50\u679C\uFF0C\u6309\u4E0B\u87A2\u5E55\u53F3\u4E0B\u65B9\u7684\u5132\u5B58\u6309\u9215\uFF0C\u5373\u53EF\u5132\u5B58\u4E26\u6AA2\u89963D\u6A21\u578B\u3002\n\u63D0\u9192\u60A8:
+    \u8A18\u5F97\u5C0D\u73FE\u5834\u9032\u884C\u62CD\u7167\u8490\u8B49\uFF0C\u4F8B\u5982\u8ECA\u640D\u3001\u901F\u9650\u62DB\u724C\u3001\u7981\u6B62\u5DE6\u8F49\u62DB\u724C"
 --- !u!222 &689515143
 CanvasRenderer:
   m_ObjectHideFlags: 0
